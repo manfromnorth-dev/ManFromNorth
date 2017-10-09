@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoldierController : MonoBehaviour {
+public class SoldierController : MonoBehaviour, IInputObservable {
+
     // object pool
     public ObjectPoolController ObjectPoolController;
     // object list
@@ -18,6 +19,13 @@ public class SoldierController : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        // Find Input Publisher
+        InputPublisher inputPublisher = FindObjectOfType<InputPublisher>();
+        if (inputPublisher != null)
+        {
+            inputPublisher.AddObserver(this);
+        }
+
         Soldiers = ObjectPoolController.RecruitSoldier(10);
         // build object list
         SoldierEnums.Location loc = new SoldierEnums.Location(0, 0);
@@ -50,5 +58,33 @@ public class SoldierController : MonoBehaviour {
     public static Vector3 LocToVec(SoldierEnums.Location v)
     {
         return new Vector3((float)(v.x), (float)(v.y), 0.0f);
+    }
+
+    public void OnLeft()
+    {
+        Debug.Log(this.ToString() + "OnLeft");
+    }
+
+    public void OnRight()
+    {
+        Debug.Log(this.ToString() + "OnRight");
+    }
+
+    public void OnUp()
+    {
+        Debug.Log(this.ToString() + "OnUp");
+    }
+
+    public void OnDown()
+    {
+        Debug.Log(this.ToString() + "OnDown");
+    }
+
+    public void OnTouch(Vector2[] position)
+    {
+        foreach (Vector2 v in position)
+        {
+            Debug.Log(this.ToString() + "position: " + v);
+        }
     }
 }
